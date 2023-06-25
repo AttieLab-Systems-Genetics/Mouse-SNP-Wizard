@@ -1,27 +1,96 @@
-# Installation
-1. Install python3
+# vcf2csv
+vcf2csv is a utility tool designed to convert VCF files into CSV format. The tool comes with options to specify paths for input and output files, enable debug mode, and more. This open-source project is released under the MIT license.
 
-Ensure that python3 is installed on your system. If not, install it from [here](https://www.python.org/downloads/)
+## Installation Guide
 
-2. Install pip3
+## Prerequisites
+- A C++ compiler that supports C++17
+- Make
 
-Ensure that pip3 is installed on your system. If not, install it from [here](https://pip.pypa.io/en/stable/installing/)
+If you already have a C++ compiler and Make installed, you can skip the "Prerequisites Installation" section.
 
-3. Install dependencies
-To install the dependencies, run the following command
-```
-pip3 install -r requirements.txt
-```
+## Prerequisites Installation
+
+### Windows
+Consider using [MinGW](http://www.mingw.org/) or [Visual Studio](https://visualstudio.microsoft.com/vs/).
+
+### Linux
+Options include [GCC](https://gcc.gnu.org/), [Clang](https://clang.llvm.org/), or [Intel C++ Compiler](https://software.intel.com/en-us/c-compilers).
+
+### MacOS
+You can use [Xcode](https://developer.apple.com/xcode/), which includes both a C++ compiler and Make.
+
+## Building the Project
+
+### Windows
+
+#### If Using MinGW
+1. Open command line.
+2. Navigate to the project directory.
+3. Run `mingw32-make`.
+
+#### If Using Visual Studio
+1. Open command line.
+2. Navigate to the project directory.
+3. Run `nmake`.
+
+### Linux (GCC or Clang)
+
+1. Open command line.
+2. Navigate to the project directory.
+3. Run `make`.
+
+### MacOS (Xcode)
+
+1. Open command line.
+2. Navigate to the project directory.
+3. Run `make`.
+
+## Running the Program
+
+Here's how to use the program:
+
+~~~
+Usage: ./vcf2csv <vcf-file> [options]
+
+Options:
+  --consequence-file <file>    Specify the path to the consequence file (default: ../web/public/data/consequences.json)
+  --strain-file <file>         Specify the path to the strain file (default: ../web/public/data/strains.json)
+  --output-file <file>         Specify the path to the output file (default: output.csv)
+  --debug                      Enable debug mode
+  -h, --help                   Display this help message
+~~~
+
+### Windows
+1. Open command line.
+2. Navigate to the project directory.
+3. Run `vcf2csv.exe <VCF file path>`.
+
+### Linux
+1. Open command line.
+2. Navigate to the project directory.
+3. Run `./vcf2csv <VCF file path>`.
+
+### MacOS
+1. Open command line.
+2. Navigate to the project directory.
+3. Run `./vcf2csv <VCF file path>`.
+
+## Examples
+
+Here are a few examples of common use cases:
 
 
+### Example 1: Basic usage
+~~~
+./vcf2csv example.vcf
+~~~
 
-# Running the script
-1. Run the script
-To run the script, run the following command
-```
-python3 parser-vcf.py
-```
-2. Select the .vcf file
-Select the .vcf file you want to parse
+### Example 2: Enabling debug mode and specifying output file
+~~~
+./vcf2csv example.vcf --debug --output-file output.csv
+~~~
 
-3. Ensure that the (finish this later...)
+## License
+
+This project is licensed under the XYZ license. See the [LICENSE](../LICENSE) file for details.
