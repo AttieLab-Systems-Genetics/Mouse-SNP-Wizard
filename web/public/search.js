@@ -1,29 +1,10 @@
 var strains = $('#strains').val().split(',');
 var consequences = $('#consequence').val().split(',');
-console.log("consequences", consequences);
-var loaded = false;
-var consequenceNames
-fetch('/data/consequences.json').then(response => response.json()).then(data => {
-    consequenceNames = data;
-    //Set the consequence text
-    var consequenceText = "";
-    for (var consequence in consequences) {
-        console.log(consequenceNames[consequences[consequence]], consequences[consequence])
-        consequenceText += consequenceNames[consequences[consequence]] + ", ";
-
-    }
-    console.log("consequenceText", consequenceText);
-    document.getElementById('consequenceDisplay').innerHTML = consequenceText.substring(0, consequenceText.length - 2)
-    loaded = true;
-}).catch((error) => {
-    console.error('Error:', error);
-});
-
-
 var limit = 10000; // Number of rows to load per request
 var offset = 0; // Initial offset
 const loadMoreButton = document.getElementById('loadMoreBtn');
 const loadAllButton = document.getElementById('loadAllBtn');
+var consequenceNames = document.getElementById('consequenceNames').value.split(',');
 var columns = [
     { title: "Symbol", data: 0 },
     { title: "Chr", data: 1 },
@@ -83,24 +64,37 @@ var table = $('#myTable').DataTable({
             extend: 'csv',
             exportOptions: {
                 orthogonal: 'sort'
-            }
+            },
+            filename: getFileName
         },
         {
             extend: 'excel',
             exportOptions: {
                 orthogonal: 'sort'
-            }
+            }, 
+            filename: getFileName
         },
         {
             extend: 'pdf',
             exportOptions: {
                 orthogonal: 'sort'
-            }
+            },
+            filename: getFileName
         }
     ],
     columns: columns,
 });
 
+function getFileName() {
+    if ($('#symbol').val() != '') {
+        return $('#symbol').val();
+    } else if ($('#chromosome').val() != '') {
+        return "chr " + $('#chromosome').val() + " pos " + $('#start').val() + "-" + $('#end').val();
+    } else {
+        return "mouse_snp_wizard";
+    }
+
+}
 
 
 function cleanStrain(strain) {
@@ -115,22 +109,6 @@ function cleanStrain(strain) {
 
 
 function add_data_to_table(data) {
-    var waiting = 0
-    while (!loaded) {
-        waiting++;
-        //Sleep for 1ms
-        var start = new Date().getTime();
-        var end = start;
-        while (end < start + 1) {
-            end = new Date().getTime();
-        }
-
-        if (waiting > 1000) {
-            console.error("Error loading consequences");
-            //Error!
-            return;
-        }
-    }
     data = data.rows;
     if (data.length > 0) {
         // Append the new rows to the table
@@ -253,12 +231,17 @@ function loadRows() {
 }
 
 function setupPage() {
-    //Set up search terms   
+    var consequenceText = "";
     var strainText = "";
+
+    for (var consequence in consequences) {
+        consequenceText += consequenceNames[consequences[consequence]] + ", ";
+    }
     for (var strain in strains) {
         strainText += cleanStrain(strains[strain]) + ", ";
     }
 
+    document.getElementById('consequenceDisplay').innerHTML = consequenceText.substring(0, consequenceText.length - 2)
     document.getElementById('strainDisplay').innerHTML = strainText.substring(0, strainText.length - 2)
 
     loadMoreButton.disabled = true;
@@ -273,7 +256,6 @@ function setupPage() {
     }
 
     $("#loadMoreBtn, #loadAllBtn").show();
-
 
 
     // Load more rows when the "Load More" button is clicked
@@ -307,11 +289,6 @@ function setupPage() {
 
 
 $(document).ready(function () {
-    setupPage();
-
-    // Load initial rows when the page loads
-    loadRows();
-
     // Re-draw DataTables after loading initial rows [only needed for the initial load]
     table.draw();
 
@@ -322,3 +299,8 @@ $(document).ready(function () {
         }
     });
 });
+
+setupPage();
+
+// Load initial rows when the page loads
+loadRows();

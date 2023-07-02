@@ -26,7 +26,6 @@
   <!-- Buttons extensions -->
   <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
-
   <title>Mouse SNP Wizard</title>
 </head>
 <header>
@@ -48,7 +47,7 @@
       <h1>ERROR</h1>
       <p>There was an error with your search. Please try again.</p>
     </div>
-    
+
     <div class="overlay"></div>
     <div>
       <% if(searchBy == 'symbol') { %>
@@ -88,6 +87,7 @@
   <input type="hidden" id="consequence" name="consequence" value="<%= consequence %>">
   <input type="hidden" id="strains" name="strains" value="<%= strains %>">
   <input type="hidden" id="highConfidence" name="highConfidence" value="<%= highConfidence %>">
+  <input type="hidden" id="consequenceNames" name="consequenceNames" value="<%= consequenceNames %>">
 </body>
 <script src="/search.js"></script>
 
