@@ -1,0 +1,31 @@
+version: '3.1'
+services:
+
+  web:
+    build: .
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - ./database/export.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: yourusername
+      POSTGRES_DB: db
+    ports:
+      - 5432:5432
+
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

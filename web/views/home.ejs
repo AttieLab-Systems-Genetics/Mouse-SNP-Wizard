@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Mouse SNP Wizard</title>
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link rel="icon" href="/images/rainbow-loading.gif" type="image/gif">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="title">Mouse SNP Wizard</h1>
+    <form action="/search" method="GET">
+      <div class="radio-option">
+        <input type="radio" id="search-all" name="searchBy" value="all" onclick="showFields()">
+        <label for="search-all">Search Entire Genome</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" id="search-by-symbol" name="searchBy" value="symbol" onclick="showFields()" checked>
+        <label for="search-by-symbol">Search by Gene Symbol</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" id="search-by-position" name="searchBy" value="position" onclick="showFields()">
+        <label for="search-by-position">Search by Genomic Position</label>
+      </div>
+      <br />
+      <div id="symbol-input" style="display: none;">
+        <label for="gene-symbol">Gene Symbol:</label><br>
+        <input type="text" id="gene-symbol" name="symbol" oninput="checkFields()" list="language-options"><br>
+
+        <datalist id="language-options">
+        </datalist>
+      </div>
+      <div id="position-inputs" style="display: none;">
+        <label for="chromosome">Chromosome:</label><br>
+        <select id="chromosome" name="chromosome" oninput="checkFields()">
+          <option value="">Select...</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="X">X</option>
+          <option value="Y">Y</option>
+        </select>
+        <br>
+        <label for="start-position">Start Position:</label><br>
+        <input type="text" id="start-position" name="startPosition" oninput="formatInput(event)"><br>
+        <label for="end-position">End Position:</label><br>
+        <input type="text" id="end-position" name="endPosition" oninput="formatInput(event)"><br>
+      </div>
+      <h3>Consequences:</h3>
+      <div id='buttonGroup' style='display: flex; justify-content: flex-start;'>
+        <button type='button' id='selectAll'>All</button>
+        <div style="width: 10px;"></div>
+        <button type='button' id='selectHighImpact'>High Impact</button>
+        <div style="width: 10px;"></div>
+        <button type='button' id='deselectAll'>None</button>
+      </div>
+      <br>
+      <div id='consequences' style='display: flex; flex-wrap: wrap;'>
+       
+      </div>
+
+      <h3>Strains:</h3>
+      <div id='buttonGroup' style='display: flex; justify-content: flex-start;'>
+        <button type='button' id='selectAllStrains'>All</button>
+        <div style="width: 10px;"></div>
+        <button type='button' id='selectDOMice'>DO Mice</button>
+        <div style="width: 10px;"></div>
+        <button type='button' id='deselectAllStrains'>None</button>
+      </div>
+      <br>
+      <div class='confidence-group' style='flex: 25%;'>
+        <input type="checkbox" id="high-confidence-only" name="highConfidence" value="true">
+        <label for="high-confidence-only">High Confidence Only</label><br>
+      </div>
+      <br>
+
+
+      <div id='strain' style='display: flex; flex-wrap: wrap;'>
+        <div class='strain-group' style='flex: 25.0%;'>
+          <input type="checkbox" id="129P2_OlaHsd" name="strain" value="129P2_OlaHsd">
+          <label for="129P2_OlaHsd">129P2_OlaHsd</label><br>
+          <input type="checkbox" id="129S1_SvImJ" name="strain" value="129S1_SvImJ" checked>
+          <label for="129S1_SvImJ">129S1_SvImJ</label><br>
+          <input type="checkbox" id="129S5SvEvBrd" name="strain" value="129S5SvEvBrd">
+          <label for="129S5SvEvBrd">129S5SvEvBrd</label><br>
+          <input type="checkbox" id="A_J" name="strain" value="A_J" checked>
+          <label for="A_J">A_J</label><br>
+          <input type="checkbox" id="AKR_J" name="strain" value="AKR_J">
+          <label for="AKR_J">AKR_J</label><br>
+          <input type="checkbox" id="B10.RIII" name="strain" value="B10.RIII">
+          <label for="B10.RIII">B10.RIII</label><br>
+          <input type="checkbox" id="BALB_cByJ" name="strain" value="BALB_cByJ">
+          <label for="BALB_cByJ">BALB_cByJ</label><br>
+          <input type="checkbox" id="BALB_cJ" name="strain" value="BALB_cJ">
+          <label for="BALB_cJ">BALB_cJ</label><br>
+          <input type="checkbox" id="BTBR_T+_Itpr3tf_J" name="strain" value="BTBR_T+_Itpr3tf_J">
+          <label for="BTBR_T+_Itpr3tf_J">BTBR_T+_Itpr3tf_J</label><br>
+          <input type="checkbox" id="BUB_BnJ" name="strain" value="BUB_BnJ">
+          <label for="BUB_BnJ">BUB_BnJ</label><br>
+          <input type="checkbox" id="C3H_HeH" name="strain" value="C3H_HeH">
+          <label for="C3H_HeH">C3H_HeH</label><br>
+          <input type="checkbox" id="C3H_HeJ" name="strain" value="C3H_HeJ">
+          <label for="C3H_HeJ">C3H_HeJ</label><br>
+          <input type="checkbox" id="C57BL_10J" name="strain" value="C57BL_10J">
+          <label for="C57BL_10J">C57BL_10J</label><br>
+        </div>
+        <div class='strain-group' style='flex: 25.0%;'>
+          <input type="checkbox" id="C57BL_10SnJ" name="strain" value="C57BL_10SnJ">
+          <label for="C57BL_10SnJ">C57BL_10SnJ</label><br>
+          <input type="checkbox" id="C57BL_6NJ" name="strain" value="C57BL_6NJ">
+          <label for="C57BL_6NJ">C57BL_6NJ</label><br>
+          <input type="checkbox" id="C57BR_cdJ" name="strain" value="C57BR_cdJ">
+          <label for="C57BR_cdJ">C57BR_cdJ</label><br>
+          <input type="checkbox" id="C57L_J" name="strain" value="C57L_J">
+          <label for="C57L_J">C57L_J</label><br>
+          <input type="checkbox" id="C58_J" name="strain" value="C58_J">
+          <label for="C58_J">C58_J</label><br>
+          <input type="checkbox" id="CAST_EiJ" name="strain" value="CAST_EiJ" checked>
+          <label for="CAST_EiJ">CAST_EiJ</label><br>
+          <input type="checkbox" id="CBA_J" name="strain" value="CBA_J">
+          <label for="CBA_J">CBA_J</label><br>
+          <input type="checkbox" id="CE_J" name="strain" value="CE_J">
+          <label for="CE_J">CE_J</label><br>
+          <input type="checkbox" id="CZECHII_EiJ" name="strain" value="CZECHII_EiJ">
+          <label for="CZECHII_EiJ">CZECHII_EiJ</label><br>
+          <input type="checkbox" id="DBA_1J" name="strain" value="DBA_1J">
+          <label for="DBA_1J">DBA_1J</label><br>
+          <input type="checkbox" id="DBA_2J" name="strain" value="DBA_2J">
+          <label for="DBA_2J">DBA_2J</label><br>
+          <input type="checkbox" id="FVB_NJ" name="strain" value="FVB_NJ">
+          <label for="FVB_NJ">FVB_NJ</label><br>
+          <input type="checkbox" id="I_LnJ" name="strain" value="I_LnJ">
+          <label for="I_LnJ">I_LnJ</label><br>
+        </div>
+        <div class='strain-group' style='flex: 25.0%;'>
+          <input type="checkbox" id="JF1_MsJ" name="strain" value="JF1_MsJ">
+          <label for="JF1_MsJ">JF1_MsJ</label><br>
+          <input type="checkbox" id="KK_HiJ" name="strain" value="KK_HiJ">
+          <label for="KK_HiJ">KK_HiJ</label><br>
+          <input type="checkbox" id="LEWES_EiJ" name="strain" value="LEWES_EiJ">
+          <label for="LEWES_EiJ">LEWES_EiJ</label><br>
+          <input type="checkbox" id="LG_J" name="strain" value="LG_J">
+          <label for="LG_J">LG_J</label><br>
+          <input type="checkbox" id="LP_J" name="strain" value="LP_J">
+          <label for="LP_J">LP_J</label><br>
+          <input type="checkbox" id="MAMy_J" name="strain" value="MAMy_J">
+          <label for="MAMy_J">MAMy_J</label><br>
+          <input type="checkbox" id="MOLF_EiJ" name="strain" value="MOLF_EiJ">
+          <label for="MOLF_EiJ">MOLF_EiJ</label><br>
+          <input type="checkbox" id="NOD_ShiLtJ" name="strain" value="NOD_ShiLtJ" checked>
+          <label for="NOD_ShiLtJ">NOD_ShiLtJ</label><br>
+          <input type="checkbox" id="NON_LtJ" name="strain" value="NON_LtJ">
+          <label for="NON_LtJ">NON_LtJ</label><br>
+          <input type="checkbox" id="NZB_B1NJ" name="strain" value="NZB_B1NJ">
+          <label for="NZB_B1NJ">NZB_B1NJ</label><br>
+          <input type="checkbox" id="NZO_HlLtJ" name="strain" value="NZO_HlLtJ" checked>
+          <label for="NZO_HlLtJ">NZO_HlLtJ</label><br>
+          <input type="checkbox" id="NZW_LacJ" name="strain" value="NZW_LacJ">
+          <label for="NZW_LacJ">NZW_LacJ</label><br>
+          <input type="checkbox" id="PL_J" name="strain" value="PL_J">
+          <label for="PL_J">PL_J</label><br>
+        </div>
+        <div class='strain-group' style='flex: 25.0%;'>
+          <input type="checkbox" id="PWK_PhJ" name="strain" value="PWK_PhJ" checked>
+          <label for="PWK_PhJ">PWK_PhJ</label><br>
+          <input type="checkbox" id="QSi3" name="strain" value="QSi3">
+          <label for="QSi3">QSi3</label><br>
+          <input type="checkbox" id="QSi5" name="strain" value="QSi5">
+          <label for="QSi5">QSi5</label><br>
+          <input type="checkbox" id="RF_J" name="strain" value="RF_J">
+          <label for="RF_J">RF_J</label><br>
+          <input type="checkbox" id="RIIIS_J" name="strain" value="RIIIS_J">
+          <label for="RIIIS_J">RIIIS_J</label><br>
+          <input type="checkbox" id="SEA_GnJ" name="strain" value="SEA_GnJ">
+          <label for="SEA_GnJ">SEA_GnJ</label><br>
+          <input type="checkbox" id="SJL_J" name="strain" value="SJL_J">
+          <label for="SJL_J">SJL_J</label><br>
+          <input type="checkbox" id="SM_J" name="strain" value="SM_J">
+          <label for="SM_J">SM_J</label><br>
+          <input type="checkbox" id="SPRET_EiJ" name="strain" value="SPRET_EiJ">
+          <label for="SPRET_EiJ">SPRET_EiJ</label><br>
+          <input type="checkbox" id="ST_bJ" name="strain" value="ST_bJ">
+          <label for="ST_bJ">ST_bJ</label><br>
+          <input type="checkbox" id="SWR_J" name="strain" value="SWR_J">
+          <label for="SWR_J">SWR_J</label><br>
+          <input type="checkbox" id="WSB_EiJ" name="strain" value="WSB_EiJ" checked>
+          <label for="WSB_EiJ">WSB_EiJ</label><br>
+          <input type="checkbox" id="ZALENDE_Ei" name="strain" value="ZALENDE_Ei">
+          <label for="ZALENDE_Ei">ZALENDE_Ei</label><br>
+        </div>
+      </div>
+      <input type="submit" id="search-button" value="Search">
+    </form>
+  </div>
+</body>
+
+<script rel="text/javascript" src="/home.js"></script>
+
+</html>

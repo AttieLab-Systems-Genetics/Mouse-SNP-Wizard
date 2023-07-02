@@ -1,0 +1,216 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling the header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+/* Styling the button */
+header button {
+    align-self: flex-start;
+}
+
+/* Styling the title */
+header h1 {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.title {
+    text-align: center;
+    font-size: 3em;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"],
+input[type="submit"] {
+    margin: 10px 0;
+    padding: 10px;
+}
+
+input[type="submit"] {
+    margin: 10px 0;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+}
+
+input[type="submit"]:disabled {
+    background-color: #B0C4DE;
+    color: #696969;
+}
+
+.radios {
+    text-align: left;
+}
+
+.radio-option {
+    display: inline-flex;
+    align-items: center;
+}
+
+label {
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    position: relative;
+    justify-content: center;
+    text-align: center;
+}
+
+thead {
+    background-color: #4C5364;
+    color: #ffffff;
+}
+
+td {
+    border-top: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#position-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#position-container span {
+    flex: 1;
+    text-align: center;
+}
+
+#position-slider {
+    flex: 2;
+    width: 70%;
+    /* Adjust this value according to your design needs */
+}
+
+#position-container span::after {
+    content: "|";
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#position-container span:last-child::after {
+    content: "";
+}
+
+.noUi-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.csv-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.negative {
+    background-color: red;
+    color: white;
+}
+
+.positive {
+    background-color: green;
+    color: white;
+}
+
+.unknown {
+    background-color: orange;
+    color: white;
+}
+
+.dataTables_scrollHeadInner {
+    margin: auto;
+}
+
+.loader {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+}
+
+.loader img {
+    width: 500px;
+    height: 300px;
+    pointer-events: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.rainbow-loading {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+}
+
+.rainbow-loading img {
+    width: 500px;
+    height: 300px;
+    pointer-events: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.error {
+    color: red;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Gray out the background */
+    position: fixed;
+    /* Cover the whole page */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9998;
+    /* Appear under the loader */
+    display: none;
+}
+
+.dt-buttons {
+    display: flex;
+    justify-content: center;
+}
