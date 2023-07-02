@@ -1,7 +1,6 @@
 # Upload CSV file to postgresql database
 import pandas as pd
 from sqlalchemy import create_engine, Table, Column, Integer, MetaData
-from getpass import getpass
 import sys
 import os
 
@@ -18,7 +17,7 @@ if not os.path.isfile(sys.argv[1]):
 
 def get_connection_string():
     username = input("Please enter your PostgreSQL username: ")
-    password = getpass("Please enter your PostgreSQL password (hidden): ")
+    password = input("Please enter your PostgreSQL password (hidden): ")
     hostname = input("Please enter your PostgreSQL hostname (default is localhost): ") or 'localhost'
     port = input("Please enter your PostgreSQL port (default is 5432): ") or '5432'
     database = input("Please enter your PostgreSQL database (default is postgres): ") or 'postgres'
@@ -27,10 +26,12 @@ def get_connection_string():
 def main():
     # Create a connection to your database
     engine = create_engine(get_connection_string())
-
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+    connection = None
     #Check connection
     try:
-        engine.connect()
+       connection = engine.connect()
     except:
         print("Connection failed, would you like to try again?")
         if input("Y/N: ").lower() == 'y':
@@ -39,16 +40,22 @@ def main():
     
     table_name = input("Please enter the name of the table you would like to create/add to: ")
     #Check if table exists
-    if table_name in engine.table_names():
+    if table_name in metadata.tables:
         print("Table already exists, would you like to add to it?")
         if input("Y/N: ").lower() == 'y':
             pass
         else:
             exit()
-            
+    
+    count = 0
     chunksize = 100000
-    for chunk in pd.read_csv('../SNPs.csv', chunksize=chunksize):
-        chunk.to_sql('mytable', engine, if_exists='append')
+    for chunk in pd.read_csv(sys.argv[1], chunksize=chunksize):      
+        #Set chromosome to string
+        chunk['chromosome'] = chunk['chromosome'].astype(str)
+        chunk.to_sql(table_name, engine, if_exists='append', index=False)
+        count += chunksize
+        print(f"{count} rows inserted")
+
 
 if __name__ == '__main__':
     main()

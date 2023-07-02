@@ -28,7 +28,6 @@ def main():
     engine = create_engine(get_connection_string())
     metadata = MetaData()
     metadata.reflect(bind=engine)
-    connection = None
     #Check connection
     try:
         connection = engine.connect()
@@ -46,14 +45,6 @@ def main():
     if table_name not in metadata.tables:
         print("the table does not exist, please create it first")
         exit()
-
-    #If there is no rs_number column, add it
-    if 'rs_number' not in metadata.tables[table_name].columns:
-        connection.execute(text(f"ALTER TABLE {table_name} ADD COLUMN rs_number VARCHAR(255)"))
-
-    
-    #Create a temporary table to store the rs_numbers with the chromosome and position
-    connection.execute(text(f"CREATE TEMP TABLE temp_rs_numbers (ID VARCHAR(255), chromosome VARCHAR(255), POS INT)"))
 
     #Read the tsv file in chunks
     chunksize = 100000
@@ -74,18 +65,22 @@ def main():
         chunk.rename(columns={'#CHROM': 'chromosome', 'POS': 'position', 'ID': 'rs_number'}, inplace=True)
         #Chromosome is an char array, so convert it to a string
         chunk['chromosome'] = chunk['chromosome'].astype(str)
+        print("Uploading chunk")
 
-        chunk[['rs_number', 'chromosome', 'position']].to_sql('temp_rs_numbers', connection, if_exists='append', index=False)
+        chunk[['rs_number', 'chromosome', 'position']].to_sql('rs_numbers', engine, if_exists='append', index=False)
         lines_uploaded += chunksize
-        print(f"{lines_uploaded} lines uploaded")
-
+        #Print lines uploaded with commas
+        print(f"{lines_uploaded:,} lines uploaded")
     print("Finished uploading rs_numbers")
+    
+    
+    exit()
     #Update the rs_numbers in the main table
     if 'rs_number' not in metadata.tables[table_name].columns:
         connection.execute(text(f"ALTER TABLE {table_name} ADD COLUMN rs_number VARCHAR(255)"))
 
     print("Updating rs_numbers")
-    connection.execute(text(f"UPDATE {table_name} SET rs_number = temp_rs_numbers.ID FROM temp_rs_numbers WHERE {table_name}.chromosome = temp_rs_numbers.chromosome AND {table_name}.position = temp_rs_numbers.POS"))
+    connection.execute(text(f"UPDATE {table_name} SET rs_number = temp_rs_numbers.ID FROM temp_rs_numbers WHERE {table_name}.chromosome = temp_rs_numbers.chromosome AND {table_name}.position = temp_rs_numbers.position"))
     print("Finished updating rs_numbers")
     #Drop the temp table
     connection.execute(text(f"DROP TABLE temp_rs_numbers"))

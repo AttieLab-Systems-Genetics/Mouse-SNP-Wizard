@@ -47,7 +47,7 @@ string formatInt(int number)
 
 void progressBar(int length, int currentLines, int estimatedLines, long timeElapsed)
 {
-    long percent = currentLines * 100 / estimatedLines;
+    long percent = (long)currentLines * 100 / (long)estimatedLines;
 
     if (!debug) // Only print the progress bar if debug mode is disabled
     {

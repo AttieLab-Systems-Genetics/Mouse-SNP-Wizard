@@ -175,8 +175,8 @@ int main(int argc, char **argv)
     }
 
     string filePath = argv[1];
-    string consequenceFile = "../web/public/data/consequences.json";
-    string strainFile = "../web/public/data/strains.json";
+    string consequenceFile = "../../web/public/data/consequences.json";
+    string strainFile = "../../web/public/data/strains.json";
     string outputFile = "output.csv";
 
     if (!ifstream(filePath))

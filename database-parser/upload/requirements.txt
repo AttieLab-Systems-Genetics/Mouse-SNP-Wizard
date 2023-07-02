@@ -1,2 +1,4 @@
 pandas==2.0.2
 sqlalchemy==2.0.17
+psycopg2-binary==2.9.6
+psycopg2==2.9.6
