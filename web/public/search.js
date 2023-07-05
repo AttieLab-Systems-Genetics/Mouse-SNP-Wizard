@@ -72,7 +72,7 @@ var table = $('#myTable').DataTable({
             extend: 'excel',
             exportOptions: {
                 orthogonal: 'sort'
-            }, 
+            },
             filename: getFileName
         }
     ],
@@ -107,36 +107,37 @@ function add_data_to_table(data) {
     if (data.length > 0) {
         // Append the new rows to the table
         data.forEach(function (data) {
-            var rowArray = [
-                data.symbol,
-                data.chromosome,
-                data.position,
-                data.rs_number,
-            ];
-            if (data.consequence.length > 1) {
+            //Don't split on commas in when inside of {}
+            var rowArray = data.row.replace("(", "").replace(")", "").replace(/"/g, '').split(/,(?![^{]*})/);
+
+            //Fix consequence info to display text instead of indexes
+            var consequences = rowArray[4].substring(1, rowArray[4].length - 1).split(",");
+            if (consequences.length > 1) {
                 var temp = "";
-                for (var consequence in data.consequence) {
-                    temp += consequenceNames[data.consequence[consequence]] + "&";
+                for (var consequence in consequences) {
+                    temp += consequenceNames[consequences[consequence]] + "&";
                 }
                 temp = temp.substring(0, temp.length - 1);
-                rowArray.push(temp);
+                rowArray[4] = temp;
             } else {
-                rowArray.push(consequenceNames[data.consequence[0]]); //add consequence
+                rowArray[4] = consequenceNames[consequences[0]];
             }
-            //add all strains
-            strains.forEach(strain => {
-                var value = data[strain];
-                if (value == "-1") {
-                    value = "NA";
-                } else if (value == "1") {
-                    value = "x";
-                } else if (value == "2") {
-                    value = "?";
-                } else {
-                    value = "";
+            
+            //Fix strain info to display x, ?, and NA
+            for (var i = 5; i < rowArray.length; i++) {
+                if (rowArray[i] == "-1") {
+                    rowArray[i] = "NA";
                 }
-                rowArray.push(value);
-            });
+                else if (rowArray[i] == "1") {
+                    rowArray[i] = "x";
+                }
+                else if (rowArray[i] == "2") {
+                    rowArray[i] = "?";
+                }
+                else {
+                    rowArray[i] = "";
+                }
+            }
             table.row.add(rowArray);
         });
     }
@@ -190,7 +191,7 @@ function loadRows() {
             // Handle error response
             $('.error, .overlay').show();
             $('.loading-image').hide();
-           
+
             loadMoreButton.disabled = false;
             loadAllButton.disabled = false;
             //Set button to red with white text

@@ -81,8 +81,8 @@ function setupApp() {
         const consequences = req.query.consequence;
         const strains = req.query.strains.split(',');
         const highConfidence = req.query.highConfidence;
-
-        let query = 'SELECT * FROM snps WHERE ';
+        //Surround strains with double quotes
+        let query = 'SELECT (symbol, chromosome, position, rs_number, consequence, ' + strains.map(strain => `"${strain}"`).join(', ') + ') FROM snps WHERE ';
         let params = [];
 
         if (symbol) {

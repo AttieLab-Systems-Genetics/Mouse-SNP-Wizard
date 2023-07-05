@@ -238,9 +238,6 @@ document.getElementById('gene-symbol').addEventListener('focus', function () {
     this.style.color = 'black';
 });
 
-
-
-
 window.onload = function () {
     //Set up event listeners
     fetch('/data.json.gz')
