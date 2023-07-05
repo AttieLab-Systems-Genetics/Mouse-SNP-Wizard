@@ -4,7 +4,7 @@ body {
 }
 
 .container {
-    width: 80%;
+    width: 85%;
     margin: 0 auto;
     padding: 20px;
     background-color: #fff;
@@ -82,6 +82,7 @@ table {
     position: relative;
     justify-content: center;
     text-align: center;
+    overflow-x: auto;
 }
 
 thead {
@@ -154,7 +155,7 @@ tr:nth-child(even) {
     margin: auto;
 }
 
-.loader {
+.loading-image {
     position: fixed;
     left: 50%;
     top: 50%;
@@ -163,26 +164,7 @@ tr:nth-child(even) {
     display: none;
 }
 
-.loader img {
-    width: 500px;
-    height: 300px;
-    pointer-events: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-}
-
-.rainbow-loading {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    display: none;
-}
-
-.rainbow-loading img {
+.loading-image img {
     width: 500px;
     height: 300px;
     pointer-events: none;
@@ -194,6 +176,13 @@ tr:nth-child(even) {
 
 .error {
     color: red;
+    position: fixed;
+    text-align: center;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
 }
 
 .overlay {

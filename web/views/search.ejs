@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <link rel="stylesheet" type="text/css" href="/styles.css">
@@ -9,8 +9,14 @@
   <!-- DataTables CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
 
+  <!-- FixedHeader CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.2.1/css/fixedHeader.dataTables.min.css" />
+
   <!-- DataTables -->
   <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+  <!-- FixedHeader JS -->
+  <script src="https://cdn.datatables.net/fixedheader/3.2.1/js/dataTables.fixedHeader.min.js"></script>
 
   <!-- Buttons -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
@@ -18,10 +24,6 @@
 
   <!-- JSZip (for Excel export) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-
-  <!-- PDFMake (for PDF export) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 
   <!-- Buttons extensions -->
   <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
@@ -37,15 +39,56 @@
 
 <body>
   <div class="container">
-    <div class="loader">
-      <img src="/images/default-loading.gif" alt="Loading...">
+    <div id="loading-image">
+      <!-- The image will be inserted here by JavaScript -->
     </div>
-    <div class="rainbow-loading">
-      <img src="/images/rainbow-loading.gif" alt="Loading...">
-    </div>
+
+    <script>
+      // Get the current month
+      var currentMonth = new Date().getMonth();
+
+      // Set the source and alt text of the image based on the current month
+      var imageSourceWebP, imageSourceGif, altText;
+      if (currentMonth === 5) { // June is month 5 in JavaScript (0-indexed)
+        imageSourceWebP = "/images/rainbow-loading.webp";
+        imageSourceGif = "/images/rainbow-loading.gif";
+        altText = "Rainbow Loading...";
+      } else {
+        imageSourceWebP = "/images/default-loading.webp";
+        imageSourceGif = "/images/default-loading.gif";
+        altText = "Default Loading...";
+      }
+
+      // Create the picture element
+      var picture = document.createElement("picture");
+
+      // Create the source element for .webp
+      var sourceWebP = document.createElement("source");
+      sourceWebP.srcset = imageSourceWebP;
+      sourceWebP.type = "image/webp";
+      sourceWebP.className = "loading-image"
+      picture.appendChild(sourceWebP);
+
+      // Create the source element for .gif
+      var sourceGif = document.createElement("source");
+      sourceGif.srcset = imageSourceGif;
+      sourceGif.type = "image/gif";
+      sourceGif.className = "loading-image"
+      picture.appendChild(sourceGif);
+
+      // Create the fallback image element
+      var img = document.createElement("img");
+      img.src = imageSourceGif;
+      img.alt = altText;
+      img.className = "loading-image"
+      picture.appendChild(img);
+
+      // Insert the picture into the div
+      document.getElementById("loading-image").appendChild(picture);
+    </script>
     <div class="error">
       <h1>ERROR</h1>
-      <p>There was an error with your search. Please try again.</p>
+      <p>There was an error with your search.<br>Please try again.</p>
     </div>
 
     <div class="overlay"></div>

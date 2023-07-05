@@ -212,10 +212,44 @@ document.getElementById('deselectAllStrains').onclick = function () {
     }
 }
 
+//Ensure that the gene symbol is valid, if not set the text to red
+document.getElementById('gene-symbol').addEventListener('blur', function () {
+    console.log('blur')
+    var inputValue = this.value.toLowerCase();
+    var dataList = document.getElementById('language-options');
+    var options = dataList.querySelectorAll('option');
+    var found = false;
+    for (var i = 0; i < options.length; i++) {
+        var optionValue = options[i].value.toLowerCase();
+
+        if (optionValue === inputValue) {
+            found = true;
+            this.value = options[i].value;
+            break;
+        }
+    }
+    if (!found) {
+        //Set text to red to indicate that the gene symbol is not valid
+        this.style.color = 'red';
+    }
+});
+
+document.getElementById('gene-symbol').addEventListener('focus', function () {
+    this.style.color = 'black';
+});
+
+
+
+
 window.onload = function () {
     //Set up event listeners
-    fetch('/data.json')
-        .then(response => response.json())
+    fetch('/data.json.gz')
+        .then(response => response.arrayBuffer())
+        .then(buffer => {
+            const data = new Uint8Array(buffer);
+            const decompressed = pako.inflate(data, { to: 'string' });
+            return JSON.parse(decompressed);
+        })
         .then(data => {
             const datalist = document.getElementById('language-options');
             data.sort();

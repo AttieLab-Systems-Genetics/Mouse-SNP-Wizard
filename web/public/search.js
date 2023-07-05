@@ -50,6 +50,7 @@ var table = $('#myTable').DataTable({
             }
         });
     },
+    fixedHeader: true,
     scrollX: true,
     responsive: true,
     dom: 'lBfrtip',
@@ -72,13 +73,6 @@ var table = $('#myTable').DataTable({
             exportOptions: {
                 orthogonal: 'sort'
             }, 
-            filename: getFileName
-        },
-        {
-            extend: 'pdf',
-            exportOptions: {
-                orthogonal: 'sort'
-            },
             filename: getFileName
         }
     ],
@@ -149,12 +143,7 @@ function add_data_to_table(data) {
 }
 
 function loadRows() {
-    //If it is June, show the rainbow loader
-    if (new Date().getMonth() == 5) {
-        $('.rainbow-loading, .overlay').show();
-    } else {
-        $('.loader, .overlay').show();
-    }
+    $('.loading-image, .overlay').show();
     loadMoreButton.disabled = true;
     loadAllButton.disabled = true;
     $.ajax({
@@ -174,7 +163,8 @@ function loadRows() {
         },
         success: function (response) {
             // Handle success response
-            var results = response.results;
+            console.log(response)
+            var results = response;
 
             add_data_to_table(results); // Add rows to the table
 
@@ -187,37 +177,20 @@ function loadRows() {
 
             // If there might be more rows to load, show the "Load More" button
             if (results.rows.length === limit) {
-                //If it is June, show the rainbow loader
-                if (new Date().getMonth() == 5) {
-                    $('.rainbow-loading, .overlay').hide();
-                } else {
-                    $('.loader, .overlay').hide();
-                }
+                $('.loading-image, .overlay').hide();
                 loadMoreButton.disabled = false;
                 loadAllButton.disabled = false;
             } else {
                 // No more rows to load, hide the "Load More" button
                 $("#loadMoreBtn, #loadAllBtn").hide();
-                if (new Date().getMonth() == 5) {
-                    $('.rainbow-loading, .overlay').hide();
-                } else {
-                    $('.loader, .overlay').hide();
-                }
+                $('.loading-image, .overlay').hide();
             }
         },
-        error: function () {
+        error: function (xhr, status, error) {
             // Handle error response
-            //If it is June, show the rainbow loader
-            if (new Date().getMonth() == 5) {
-                $('.rainbow-loading, .overlay').hide();
-            } else {
-                $('.loader, .overlay').hide();
-            }
-            $('error').show(); //Hide after 3 seconds
-            setTimeout(function () {
-                $('error').hide();
-            }, 3000);
-
+            $('.error, .overlay').show();
+            $('.loading-image').hide();
+           
             loadMoreButton.disabled = false;
             loadAllButton.disabled = false;
             //Set button to red with white text
@@ -226,6 +199,10 @@ function loadRows() {
             loadAllButton.style.color = "white";
             loadMoreButton.style.backgroundColor = "red";
             loadMoreButton.style.color = "white";
+
+            setTimeout(function () {
+                $('.error, .overlay').hide();
+            }, 3000);
         }
     });
 }
@@ -246,14 +223,8 @@ function setupPage() {
 
     loadMoreButton.disabled = true;
     loadAllButton.disabled = true;
-    //If it is June, show the rainbow loader
-    if (new Date().getMonth() == 5) {
-        $('.rainbow-loading, .overlay').show();
-        $('.loader, .error').hide();
-    } else {
-        $('.loader, .overlay').show();
-        $('.rainbow-loading, .error').hide();
-    }
+    $('.loading-image, .overlay').show();
+    $('.error').hide();
 
     $("#loadMoreBtn, #loadAllBtn").show();
 
@@ -286,8 +257,6 @@ function setupPage() {
     table.page.len(100).draw();
 }
 
-
-
 $(document).ready(function () {
     // Re-draw DataTables after loading initial rows [only needed for the initial load]
     table.draw();
@@ -300,7 +269,8 @@ $(document).ready(function () {
     });
 });
 
-setupPage();
-
 // Load initial rows when the page loads
 loadRows();
+
+setupPage();
+

@@ -3,6 +3,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const { Client } = require('pg');
+const zlib = require('zlib');
 require('dotenv').config();
 var client;
 var consequenceNames = require('./public/data/consequences.json');
@@ -137,7 +138,20 @@ function setupApp() {
                 console.log(err);
                 res.status(500).send({ message: 'Internal server error' });
             } else {
-                res.send({ results });
+                //Compress results using gzip
+                zlib.gzip(JSON.stringify(results), (err, buffer) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send({ message: 'Internal server error' });
+                    } else {
+                        res.writeHead(200, {
+                            'Content-Type': 'application/json',
+                            'Content-Encoding': 'gzip',
+                            'Content-Length': buffer.length
+                        });
+                        res.end(buffer);
+                    }
+                });
             }
         });
     });
