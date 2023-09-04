@@ -1,6 +1,15 @@
+/**
+ * Switches the favicon based on the user's preferred color scheme.
+ * This function checks if dark mode is enabled and updates the favicon accordingly.
+ */
 function switchFavicon() {
+    // Check if dark mode is enabled using the 'prefers-color-scheme' media feature
     const darkModeOn = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Get the favicon element from the HTML document
     const favicon = document.getElementById('favicon');
+
+    // Update the favicon based on the color scheme
     if (darkModeOn) {
         favicon.href = '/images/favicon-dark.ico';
     } else {
@@ -8,10 +17,11 @@ function switchFavicon() {
     }
 }
 
-// Call the function to set the favicon on initial page load
+// Set the favicon based on the initial color scheme when the page loads
 switchFavicon();
 
-// If the browser supports it, listen for changes to the color scheme
+// Listen for changes to the user's preferred color scheme, if the browser supports it
 if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => switchFavicon());
+    window.matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', e => switchFavicon());
 }

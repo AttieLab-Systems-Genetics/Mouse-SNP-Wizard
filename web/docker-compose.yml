@@ -1,29 +1,30 @@
 version: '3.1'
-services:
-  web:
+services: 
+  web: #The webserver
     build: .
     restart: always
     ports:
-      - 3000:3000
+      - 3000:3000 #HTTPS
     volumes:
-      - .:/app
+      - .:/app:ro #Mount the app folder as read only
     depends_on:
       - db
 
-  db:
+  db: #The postgres database
     image: postgres
     volumes:
-      - ${SQL_EXPORT_PATH}:/docker-entrypoint-initdb.d/init.sql
+      - ${SQL_EXPORT_PATH}:/docker-entrypoint-initdb.d
     restart: always
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - 5432:5432
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      LOG: "db.log" 
 
-  adminer:
+  adminer: #Adminer allows you to access the database from the browser
     image: adminer
     restart: always
+    #command: ["php", "-d", "memory_limit=-1", "-d", "upload_max_filesize=128G", "-d", "post_max_size=128G", "-S", "[::]:8080", "-t", "/var/www/html"]
     ports:
       - 8080:8080

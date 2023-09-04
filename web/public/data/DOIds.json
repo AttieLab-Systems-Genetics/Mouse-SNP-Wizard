@@ -1,0 +1,34 @@
+[
+    {
+        "Strain": "A_J",
+        "Letter": "A"
+    },
+    {
+        "Strain": "C57BL_6J",
+        "Letter": "B"
+    },
+    {
+        "Strain": "129S1_SvImJ",
+        "Letter": "C"
+    },
+    {
+        "Strain": "NOD_ShiLtJ",
+        "Letter": "D"
+    },
+    {
+        "Strain": "NZO_HlLtJ",
+        "Letter": "E"
+    },
+    {
+        "Strain": "CAST_EiJ",
+        "Letter": "F"
+    },
+    {
+        "Strain": "PWK_PhJ",
+        "Letter": "G"
+    },
+    {
+        "Strain": "WSB_EiJ",
+        "Letter": "H"
+    }
+]

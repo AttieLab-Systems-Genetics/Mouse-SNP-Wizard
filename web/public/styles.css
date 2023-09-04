@@ -55,6 +55,7 @@ input[type="submit"] {
     background-color: #007BFF;
     color: #fff;
     border: none;
+    width: 100%;
 }
 
 input[type="submit"]:disabled {
@@ -137,7 +138,7 @@ tr:nth-child(even) {
 }
 
 .negative {
-    background-color: red;
+    background-color: rgb(204, 41, 25);
     color: white;
 }
 
@@ -162,6 +163,7 @@ tr:nth-child(even) {
     transform: translate(-50%, -50%);
     z-index: 9999;
     display: none;
+    pointer-events: none;
 }
 
 .loading-image img {
@@ -202,4 +204,23 @@ tr:nth-child(even) {
 .dt-buttons {
     display: flex;
     justify-content: center;
+}
+
+.dataTables_wrapper .dataTable td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.ui-tooltip {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f9f9f9;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    width: fit-content;
+}
+
+.block-label {
+    display: block;
 }

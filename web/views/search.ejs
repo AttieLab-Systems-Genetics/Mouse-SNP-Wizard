@@ -30,11 +30,15 @@
   <!-- Buttons extensions -->
   <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
-  <title>Mouse SNP Wizard</title>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <title>Mouse <%= table.toLowerCase().includes('indel') ? 'Indel' : 'SNP' %> Wizard</title>
 </head>
 <header>
   <button onclick="window.location.href='/'">Home</button>
-  <h1>Mouse SNP Wizard</h1>
+
+  <h1>Mouse <%= table.toLowerCase().includes('indel') ? 'Indel' : 'SNP' %> Wizard</h1>
   <br>
 </header>
 
@@ -94,22 +98,38 @@
     </div>
 
     <div class="overlay"></div>
-    <div>
-      <% if(searchBy == 'symbol') { %>
-      <div><strong>Search By:</strong> <%= searchBy %></div>
-      <div><strong>Symbol:</strong> <%= symbol %></div>
-      <% } else if(searchBy == 'position') { %>
-      <div><strong>Search By:</strong> <%= searchBy %></div>
-      <div><strong>Chromosome:</strong> <%= chromosome %></div>
-      <div><strong>Start Position:</strong> <%= start.toLocaleString() %></div>
-      <div><strong>End Position:</strong> <%= end.toLocaleString() %></div>
-      <% } else if(searchBy == 'all') { %>
-      <div><strong>Searching Entire Genome</strong></div>
-      <% } %>
-      <div><strong>High Confidence:</strong> <%= highConfidence %></div>
-      <div><strong>Consequence:</strong> <span id="consequenceDisplay"></span></div>
-      <div><strong>Strain:</strong> <span id="strainDisplay"></span></div>
-      <span><strong>Total Entries: </strong><span id="totalEntries"></span></span>
+    <div style="display: flex; justify-content: space-between;">
+      <div>
+        <div><strong>Dataset:</strong> <%= table %></div>
+        <% if(searchBy == 'symbol') { %>
+        <div><strong>Search By:</strong> <%= searchBy %></div>
+        <div><strong>Symbol:</strong> <%= symbol %></div>
+        <% } else if(searchBy == 'symbols') { %>
+        <div><strong>Search By:</strong> <%= searchBy %></div>
+        <div><strong>Symbols:</strong> <%= symbols %></div>
+        <% } else if(searchBy == 'rsNumber') { %>
+        <div><strong>Search By:</strong> <%= searchBy %></div>
+        <div><strong>RS Number:</strong> <%= rsNumber %></div>
+        <% } else if(searchBy == 'position') { %>
+        <div><strong>Search By:</strong> <%= searchBy %></div>
+        <div><strong>Chromosome:</strong> <%= chromosome %></div>
+        <div><strong>Start Position:</strong> <%= start.toLocaleString() %></div>
+        <div><strong>End Position:</strong> <%= end.toLocaleString() %></div>
+        <% } else if(searchBy == 'all') { %>
+        <div><strong>Searching Entire Genome</strong></div>
+        <% } %>
+        <div><strong>High Confidence:</strong> <%= highConfidence %></div>
+        <div><strong>Consequence:</strong> <span id="consequenceDisplay"></span></div>
+        <div><strong>Strain:</strong> <span id="strainDisplay"></span></div>
+        <span><strong>Total Entries: </strong><span id="totalEntries"></span></span><br>
+        <span><strong>Loading Time: </strong><span id="loadingTime"></span></span><br>
+      </div>
+      <div id="key">
+        <h4>Key:</h4>
+        het = Heterozygous<br>
+        lowercase = Low Confidence<br>
+        (empty) = No Data<br>
+      </div>
     </div>
     <button id="loadMoreBtn" style="display: none;">Load More</button>
     <button id="loadAllBtn" style="display: none;">Load All</button>
@@ -123,9 +143,11 @@
     </table>
 
   </div>
-
-
+  <input type="hidden" id="table" name="table" value="<%= table %>">
+  <input type="hidden" id="searchBy" name="searchBy" value="<%= searchBy %>">
   <input type="hidden" id="symbol" name="symbol" value="<%= symbol %>">
+  <input type="hidden" id="symbols" name="symbols" value="<%= symbols %>">
+  <input type="hidden" id="rsNumber" name="rsNumber" value="<%= rsNumber %>">
   <input type="hidden" id="chromosome" name="chromosome" value="<%= chromosome %>">
   <input type="hidden" id="start" name="start" value="<%= start %>">
   <input type="hidden" id="end" name="end" value="<%= end %>">
@@ -133,6 +155,7 @@
   <input type="hidden" id="strains" name="strains" value="<%= strains %>">
   <input type="hidden" id="highConfidence" name="highConfidence" value="<%= highConfidence %>">
   <input type="hidden" id="consequenceNames" name="consequenceNames" value="<%= consequenceNames %>">
+  <input type="hidden" id="DOIds" name="DOIds" value="<%= DOIds %>">
 </body>
 <script src="/search.js"></script>
 

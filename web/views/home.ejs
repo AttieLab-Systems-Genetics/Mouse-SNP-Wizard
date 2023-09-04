@@ -3,7 +3,7 @@
 
 <head>
   <title>Mouse SNP Wizard</title>
-  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <link rel="stylesheet" href="/styles.css">
   <link rel="icon" href="/images/favicon-light.ico" id="favicon">
   <script src="/favicon.js" defer></script>
 </head>
@@ -11,98 +11,162 @@
 <body>
   <div class="container">
     <h1 class="title">Mouse SNP Wizard</h1>
-    <form action="/search" method="GET">
-      <div class="radio-option">
-        <input type="radio" id="search-all" name="searchBy" value="all" onclick="showFields()">
-        <label for="search-all">Search Entire Genome</label>
-      </div>
-      <div class="radio-option">
-        <input type="radio" id="search-by-symbol" name="searchBy" value="symbol" onclick="showFields()" checked>
-        <label for="search-by-symbol">Search by Gene Symbol</label>
-      </div>
-      <div class="radio-option">
-        <input type="radio" id="search-by-position" name="searchBy" value="position" onclick="showFields()">
-        <label for="search-by-position">Search by Genomic Position</label>
-      </div>
-      <br />
-      <div id="symbol-input" style="display: none;">
-        <label for="gene-symbol">Gene Symbol:</label><br>
-        <input type="text" id="gene-symbol" name="symbol" oninput="checkFields()" list="language-options"><br>
 
-        <datalist id="language-options">
-        </datalist>
+    <form id="form" action="/search" method="GET">
+      <!-- Version -->
+      <h3>Version:</h3>
+      <div>
+        <input type="radio" id="version-1" name="version" value="grcm38" onclick="updateTable()">
+        <label for="version-1">GRCm38</label>
+        <input type="radio" id="version-2" name="version" value="grcm39" onclick="updateTable()" checked>
+        <label for="version-2">GRCm39</label>
       </div>
-      <div id="position-inputs" style="display: none;">
-        <label for="chromosome">Chromosome:</label><br>
-        <select id="chromosome" name="chromosome" oninput="checkFields()">
-          <option value="">Select...</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-          <option value="16">16</option>
-          <option value="17">17</option>
-          <option value="18">18</option>
-          <option value="19">19</option>
-          <option value="X">X</option>
-          <option value="Y">Y</option>
-        </select>
-        <br>
-        <label for="start-position">Start Position:</label><br>
-        <input type="text" id="start-position" name="startPosition" oninput="formatInput(event)"><br>
-        <label for="end-position">End Position:</label><br>
-        <input type="text" id="end-position" name="endPosition" oninput="formatInput(event)"><br>
+
+      <!-- Dataset -->
+      <h3>Dataset:</h3>
+      <div>
+        <input type="radio" id="dataset-1" name="dataset" value="snps" onclick="updateTable()" checked>
+        <label for="dataset-1">SNPs</label>
+        <input type="radio" id="dataset-2" name="dataset" value="indels" onclick="updateTable()">
+        <label for="dataset-2">Indels</label>
+      </div> <br>
+
+      <!-- Search Options -->
+      <div class="radio-option-group">
+        <div class="radio-option">
+          <input type="radio" id="search-all" name="searchBy" value="all" onclick="showFields()">
+          <label for="search-all">Search Entire Genome</label>
+        </div> <br>
+        <div class="radio-option">
+          <input type="radio" id="search-by-symbol" name="searchBy" value="symbol" onclick="showFields()" checked>
+          <label for="search-by-symbol">Search by Single Gene Symbol</label>
+        </div> <br>
+        <div class="radio-option">
+          <input type="radio" id="search-by-symbols" name="searchBy" value="symbols" onclick="showFields()">
+          <label for="search-by-symbols">Search by Multiple Gene Symbols</label>
+        </div> <br>
+        <div class="radio-option">
+          <input type="radio" id="search-by-position" name="searchBy" value="position" onclick="showFields()">
+          <label for="search-by-position">Search by Genomic Position</label>
+        </div> <br>
+        <div class="radio-option">
+          <input type="radio" id="search-by-rs-number" name="searchBy" value="rsNumber" onclick="showFields()">
+          <label for="search-by-rs-number">Search by rsNumber</label>
+        </div> <br>
       </div>
+
+      <!-- Symbol Input -->
+      <div id="symbol-input" class="hidden">
+        <label for="gene-symbol">Gene Symbol:</label>
+        <input type="text" id="gene-symbol" name="symbol" list="language-options">
+        <datalist id="language-options"></datalist>
+      </div>
+
+      <!-- Symbols Input -->
+      <div id="symbols-input" class="hidden">
+        <label for="gene-symbols" class="block-label">Gene Symbols: (Separate by new lines, commas or whitespace)</label>
+        <textarea id="gene-symbols" name="symbols" style="width: 300px; height: 100px;"></textarea>
+      </div>
+      <div id="warning" style="background-color: yellow; width: auto"></div>
+
+      <!-- rsNumber Input -->
+      <div id="rs-number-input" class="hidden">
+        <label for="rs-number-text">RS Number:</label>
+        <input type="text" id="rsNumber" name="rsNumber">
+      </div>
+
+      <!-- Position Inputs -->
+      <div id="position-inputs" class="hidden">
+        <div class="form-group">
+          <label for="chromosome">Chromosome:</label>
+          <select id="chromosome" name="chromosome" oninput="checkFields()" class="chromosome-select">
+            <option value="">Select...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="X">X</option>
+            <option value="Y">Y</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="start-position">Start Position:</label>
+          <input type="text" id="start-position" name="startPosition" oninput="formatInput(event)" class="position-input">
+          <select id="start-position-units" name="startPositionUnits" class="position-units">
+            <option value="1">bp</option>
+            <option value="1000">Kbp</option>
+            <option value="1000000" selected>Mbp</option>
+            <option value="1000000000">Gbp</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="end-position">End Position:</label>
+          <input type="text" id="end-position" name="endPosition" oninput="formatInput(event)" class="position-input">
+          <select id="end-position-units" name="endPositionUnits" class="position-units">
+            <option value="1">bp</option>
+            <option value="1000">Kbp</option>
+            <option value="1000000" selected>Mbp</option>
+            <option value="1000000000">Gbp</option>
+          </select>
+        </div>
+      </div>
+
+
+      <!-- Consequences -->
       <h3>Consequences:</h3>
-      <div id='buttonGroup' style='display: flex; justify-content: flex-start;'>
-        <button type='button' id='selectAll'>All</button>
-        <div style="width: 10px;"></div>
-        <button type='button' id='selectHighImpact'>High Impact</button>
-        <div style="width: 10px;"></div>
-        <button type='button' id='deselectAll'>None</button>
+      <div id="buttonGroup" class="button-group">
+        <button type="button" id="selectAll">All</button>
+        <button type="button" id="selectHighImpact">High Impact</button>
+        <button type="button" id="deselectAll">None</button>
       </div>
-      <br>
-      <div id='consequences' style='display: flex; flex-wrap: wrap;'>
+      <div id="consequences" class="checkbox-group"></div>
 
-      </div>
-
+      <!-- Strains -->
       <h3>Strains:</h3>
-      <div id='buttonGroup' style='display: flex; justify-content: flex-start;'>
-        <button type='button' id='selectAllStrains'>All</button>
-        <div style="width: 10px;"></div>
-        <button type='button' id='selectDOMice'>DO Mice</button>
-        <div style="width: 10px;"></div>
-        <button type='button' id='deselectAllStrains'>None</button>
+      <div class="confidence-group">
+        <input type="checkbox" id="high-confidence-only" name="highConfidence" value="true" checked>
+        <label for="high-confidence-only">High Confidence Only</label>
       </div>
-      <br>
-      <div class='confidence-group' style='flex: 25%;'>
-        <input type="checkbox" id="high-confidence-only" name="highConfidence" value="true">
-        <label for="high-confidence-only">High Confidence Only</label><br>
+      <div id="buttonGroupStrains" class="button-group">
+        <button type="button" id="selectAllStrains">All</button>
+        <button type="button" id="selectDOMice">DO Founders</button>
+        <button type="button" id="deselectAllStrains">None</button>
       </div>
-      <br>
+      <div id="strains" class="checkbox-group"></div>
 
-
-      <div id='strains' style='display: flex; flex-wrap: wrap;'>
-
-      </div>
+      <!-- Submit Button -->
       <input type="submit" id="search-button" value="Search">
+      <label id="count" style="display: flex; justify-content: center; margin-top: 10px;"></label>
     </form>
+
+    <!-- Hidden Inputs -->
+    <input type="hidden" id="consequenceNames" name="consequenceNames" value="<%= consequenceNames %>">
+    <input type="hidden" id="strainNames" name="strainNames" value="<%= strainNames %>">
+    <input type="hidden" id="DOIds" name="DOIds" value="<%= DOIds %>">
+    <input type="hidden" id="consequenceHighImpact" name="consequenceHighImpact" value="<%= consequenceHighImpact %>">
+    <input type="hidden" id="consequenceTables" name="consequenceTables" value="<%= consequenceTables %>">
   </div>
-  <input type="hidden" id="consequenceNames" name="consequenceNames" value="<%= consequenceNames %>">
-  <input type="hidden" id="strainNames" name="strainNames" value="<%= strainNames %>">
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
+  <script src="/home.js"></script>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
-<script rel="text/javascript" src="/home.js"></script>
 
 </html>
