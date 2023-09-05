@@ -6,6 +6,7 @@ var DOIds = JSON.stringify(require('../public/data/DOIds.json'));
 const { loadConsequenceNames, loadConsequenceHighImpact, loadConsequenceTables, loadSymbols, getSQLRequest } = require('./dataLoader');
 const { buildQuery } = require('./queryBuilder');
 const { initClient } = require('./dbConnect');
+const { sortStrains } = require('./utilities');
 const Debug = require('./debug');
 let consequenceNames, consequenceHighImpact, consequenceTables, symbols;
 
@@ -22,7 +23,6 @@ router.get('/', (req, res) => {
     res.render('home', { consequenceTables, consequenceNames, consequenceHighImpact, strainNames, DOIds });
 });
 
-
 router.get('/search', async (req, res) => {
     const {
         version,
@@ -37,7 +37,7 @@ router.get('/search', async (req, res) => {
         endPosition,
         endPositionUnits,
         consequence,
-        strain: strains,
+        strain,
         highConfidence,
     } = req.query;
 
@@ -45,6 +45,7 @@ router.get('/search', async (req, res) => {
     const symbols = querySymbols.split(/[\s,]+/);
     const start = startPosition.replace(/,/g, '') * startPositionUnits;
     const end = endPosition.replace(/,/g, '') * endPositionUnits;
+    const strains = sortStrains(strain);
 
 
     res.render('search', { table, searchBy, symbol, symbols, rsNumber, chromosome, start, end, consequence, strains, highConfidence, consequenceNames, strainNames, DOIds, });

@@ -301,7 +301,7 @@ const checkFields = () => {
 const showFields = () => {
     // Define arrays for IDs of fields to hide and search options
     const fieldsToHide = ['symbol-input', 'position-inputs', 'symbols-input', 'rs-number-input'];
-    const searchOptions = ['search-by-symbol', 'search-by-position', 'search-by-symbols', 'search-by-rs-number','search-all'];
+    const searchOptions = ['search-by-symbol', 'search-by-position', 'search-by-symbols', 'search-by-rs-number', 'search-all'];
 
     // Hide all input fields initially
     fieldsToHide.forEach(fieldId => {
@@ -545,46 +545,6 @@ const formDataToObject = (formData) => {
 };
 
 /**
- * Creates a mapping from Strain to Letter based on DOIds.
- * 
- * @param {Array} DOIds - An array of objects containing strain and letter pairs.
- * @returns {Object} The mapping from Strain to Letter.
- */
-const createStrainToLetterMap = (DOIds) => {
-    const strainToLetter = {};
-    DOIds.forEach((obj) => {
-        strainToLetter[obj.Strain] = obj.Letter;
-    });
-    return strainToLetter;
-};
-
-/**
- * Sorts an array of strains based on DOIds.
- * 
- * @param {Array} strains - The array of strains to be sorted.
- * @param {Array} DOIds - An array of objects containing strain and letter pairs.
- * @returns {Array} The sorted array of strains.
- */
-const sortStrains = (strains, DOIds) => {
-    const strainToLetter = createStrainToLetterMap(DOIds);
-
-    return strains.sort((a, b) => {
-        const letterA = strainToLetter[a];
-        const letterB = strainToLetter[b];
-
-        if (letterA && letterB) {
-            return letterA.localeCompare(letterB);
-        } else if (letterA) {
-            return -1;
-        } else if (letterB) {
-            return 1;
-        } else {
-            return a.localeCompare(b);
-        }
-    });
-};
-
-/**
  * Sends an AJAX request with the given data object.
  * 
  * @param {Object} dataObject - The data to be sent in the AJAX request.
@@ -628,11 +588,6 @@ const logFormData = (form) => {
     const formData = new FormData(form);
     const dataObject = formDataToObject(formData);
 
-    // Sort strains if they exist in the data object
-    if (dataObject.strain) {
-        dataObject.strain = sortStrains(dataObject.strain, DOIds);
-    }
-
     //Remove the whitespace around the gene symbols
     if (dataObject.symbols) {
         dataObject.symbols = dataObject.symbols.replace(/\s/g, '');
@@ -652,7 +607,6 @@ const logFormData = (form) => {
     // Update UI to indicate search is in progress
     document.getElementById('count').innerHTML = 'Searching...';
 
-    
     // Send the AJAX request
     sendAjaxRequest(dataObject);
 };
