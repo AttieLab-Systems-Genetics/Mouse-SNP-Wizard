@@ -58,6 +58,16 @@ const formatNumber = (num) => {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 };
 
+/** 
+ * Format input fields for position.
+ * @param {string} event - The event that triggered the function.
+ */
+const formatInput = (event) => {
+    const input = event.target;
+    const value = input.value.replace(/,/g, '');
+    input.value = formatNumber(value);
+}
+
 /**
  * Check if the gene symbol entered in the input field is valid.
  * Updates the UI accordingly and triggers field validation.
@@ -65,7 +75,6 @@ const formatNumber = (num) => {
  */
 const checkGeneSymbol = (input) => {
     const inputValue = input.value.toLowerCase();
-    console.log(inputValue, geneSymbolDict[inputValue])
     // Assume geneSymbolDict is a predefined dictionary of valid gene symbols
     if (geneSymbolDict[inputValue] !== undefined) {
         input.dataset.valid = "true";
@@ -300,7 +309,7 @@ const checkFields = () => {
  */
 const showFields = () => {
     // Define arrays for IDs of fields to hide and search options
-    const fieldsToHide = ['symbol-input', 'position-inputs', 'symbols-input', 'rs-number-input'];
+    const fieldsToHide = ['symbol-input', 'position-input', 'symbols-input', 'rs-number-input'];
     const searchOptions = ['search-by-symbol', 'search-by-position', 'search-by-symbols', 'search-by-rs-number', 'search-all'];
 
     // Hide all input fields initially
@@ -327,6 +336,7 @@ const showFields = () => {
 
     // Show the input field corresponding to the selected search option
     const selectedField = selectedOption.split('-by-')[1] + '-input';
+    console.log(selectedField)
     document.getElementById(selectedField).style.display = 'block';
 
     // Re-check form fields to enable/disable the search button
