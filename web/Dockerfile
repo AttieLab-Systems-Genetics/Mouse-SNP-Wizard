@@ -7,6 +7,12 @@ WORKDIR /app
 # Add the current directory contents into the container at /app
 COPY package*.json ./
 
+# Copy the specific directories into the container
+COPY web-server/ web-server/
+COPY views/ views/
+COPY public/ public/
+COPY .env .env
+
 # Install any needed packages specified in package.json
 RUN npm install
 
