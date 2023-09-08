@@ -78,8 +78,8 @@ async function init() {
 router.get('/count', async (req, res) => {
     try {
         req.query.limit = 1001;
-        req.query.start = req.query.startPosition.replace(/,/g, '') * req.query.startPositionUnits;
-        req.query.end = req.query.endPosition.replace(/,/g, '') * req.query.endPositionUnits;
+        req.query.start = parseInt(req.query.startPosition.replace(/,/g, '') * req.query.startPositionUnits);
+        req.query.end = parseInt(req.query.endPosition.replace(/,/g, '') * req.query.endPositionUnits);
         const { query, sqlParams } = buildQuery(req.query, '*', false);
         const count = await getSQLRequest(query, sqlParams, 15000, false);
         if (!count) {

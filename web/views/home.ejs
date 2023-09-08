@@ -106,23 +106,21 @@
         </div>
         <div class="form-group">
           <label for="start-position">Start Position:</label>
-          <input type="text" id="start-position" name="startPosition" oninput="formatInput(event)" class="position-input">
-          <select id="start-position-units" name="startPositionUnits" class="position-units">
+          <input type="text" id="start-position" name="startPosition" oninput="formatInput(event)" class="position-input" min="0" max="2000">
+          <select id="start-position-units" name="startPositionUnits" class="position-units" oninput="updateBounds(event)">
             <option value="1">bp</option>
             <option value="1000">Kbp</option>
             <option value="1000000" selected>Mbp</option>
-            <option value="1000000000">Gbp</option>
           </select>
         </div>
 
         <div class="form-group">
           <label for="end-position">End Position:</label>
-          <input type="text" id="end-position" name="endPosition" oninput="formatInput(event)" class="position-input">
-          <select id="end-position-units" name="endPositionUnits" class="position-units">
+          <input type="text" id="end-position" name="endPosition" oninput="formatInput(event)" class="position-input" min="0" max="2000">
+          <select id="end-position-units" name="endPositionUnits" class="position-units" oninput="updateBounds(event)">
             <option value="1">bp</option>
             <option value="1000">Kbp</option>
             <option value="1000000" selected>Mbp</option>
-            <option value="1000000000">Gbp</option>
           </select>
         </div>
       </div>

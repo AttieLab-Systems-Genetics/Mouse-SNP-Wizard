@@ -55,7 +55,14 @@ const getTableName = () => {
  * @returns {string} The formatted number as a string.
  */
 const formatNumber = (num) => {
-    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    // Separate the integer part and the decimal part
+    const [integerPart, decimalPart] = num.toString().split('.');
+
+    // Format the integer part with commas
+    const formattedIntegerPart = integerPart.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
+    // Concatenate back the decimal part, if any
+    return decimalPart ? `${formattedIntegerPart}.${decimalPart}` : formattedIntegerPart;
 };
 
 /** 
@@ -64,8 +71,50 @@ const formatNumber = (num) => {
  */
 const formatInput = (event) => {
     const input = event.target;
-    const value = input.value.replace(/,/g, '');
+    let value = input.value.replace(/,/g, '');
+    //Convert the value to a number
+    if (input.getAttribute("data-previous-value")) 
+        console.log(input.value + " " + input.getAttribute("data-previous-value"))
+    console.log(input.min + " " + input.max)
+
+    if (value === "")
+        return;
+    if (value === '-')
+        value = 0;
+    if (value.endsWith('.')) //Don't worry about the decimal point at the end
+        return
+    try {
+        value = parseFloat(value);
+    } catch (error) {
+        input.value = input.getAttribute("data-previous-value");
+        return;
+    }
+
+    if (value > parseFloat(input.max)) {
+        console.log("here")
+        value = Math.min(parseFloat(input.getAttribute("data-previous-value").replace(/,/g, '')), parseFloat(input.max));
+    }  else if (value < parseFloat(input.min)) {
+        value = input.getAttribute("data-previous-value");
+    }
     input.value = formatNumber(value);
+}
+
+/**
+ * Set bounds for the input fields for position
+ * @param {string} event - The event that triggered the function.
+ */
+const updateBounds = (event) => {
+    const dropdown = event.target;
+    const input = dropdown.previousElementSibling;
+    input.max = 2000000000 / dropdown.value;
+    input.min = 0;
+    if (input.value === "")
+        return
+    try {
+        input.value = formatNumber( Math.min(parseFloat(input.value.replace(/,/g, '')),input.max));
+    } catch (error) {
+        input.value = formatNumber(input.min);
+    }
 }
 
 /**
@@ -336,7 +385,6 @@ const showFields = () => {
 
     // Show the input field corresponding to the selected search option
     const selectedField = selectedOption.split('-by-')[1] + '-input';
-    console.log(selectedField)
     document.getElementById(selectedField).style.display = 'block';
 
     // Re-check form fields to enable/disable the search button
