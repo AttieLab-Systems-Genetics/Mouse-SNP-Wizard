@@ -5,6 +5,9 @@ services:
     restart: always
     ports:
       - 3000:3000 #HTTPS
+    volumes:
+      - ${PRIVATE_KEY_PATH}:/app/web-server/private_key.pem
+      - ${CERTIFICATE_PATH}:/app/web-server/certificate.pem
     depends_on:
       - db
 
