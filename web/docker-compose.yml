@@ -7,6 +7,7 @@ services:
       - 3000:3000 #HTTPS
     volumes:
       - .:/app:ro #Mount the app folder as read only
+      - /app/node_modules #Don't mount the node_modules folder
     depends_on:
       - db
 
